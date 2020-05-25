@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-export const Menu = () => {
+const Menu = () => {
     return (
         <nav id='menu'>
             <Link to='/'>Usuarios</Link>
@@ -8,3 +8,5 @@ export const Menu = () => {
         </nav>
     );
 };
+
+export default Menu

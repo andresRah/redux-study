@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
-import axios from 'axios'
+import { connect } from 'react-redux'
 
-const URL_SERVICE = 'https://jsonplaceholder.typicode.com/users';
+import * as usuariosActions from '../../actions/usuariosAction'
 
-export class Usuarios extends Component {
+class Usuarios extends Component {
 
-  constructor(){
-    super()
-    this.state = {
-      usuarios: []
-    }
-  }
+  // constructor(){
+  //   super()
+  //   this.state = {
+  //     usuarios: []
+  //   }
+  // }
 
-  async componentDidMount() {
-    const answer = await axios.get(URL_SERVICE)
-    this.setState({usuarios: answer.data})
-  }
+  componentDidMount() {
+     //const answer = await axios.get(URL_SERVICE)
+     //this.setState({usuarios: answer.data})
+     this.props.traerTodos()
+   }
 
-	ponerFilas = () => (this.state.usuarios.map((usuario) => (
+	ponerFilas = () => (this.props.usuarios.map((usuario) => (
     <tr key={usuario.id}>
         <td>
           {usuario.name}
@@ -55,4 +56,12 @@ export class Usuarios extends Component {
       </div>
     )
   }
-};
+}
+
+// De todos los reducers que hay en el combine reducers estoy sacando solo el que necesito
+const mapStateToProps = reducers => {
+  return reducers.usuariosReducers
+}
+
+/* Actions creators */
+export default connect(mapStateToProps, usuariosActions)(Usuarios)

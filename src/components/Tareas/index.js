@@ -9,7 +9,16 @@ import * as tareasActions from '../../actions/tareasActions'
 class Tareas extends Component {
 
     componentDidMount() {
-        this.props.traerTodas()
+        if(!Object.keys(this.props.tareas).length){
+            this.props.traerTodas()
+        }
+    }
+
+    componentDidUpdate(){
+        const { tareas, cargando, traerTodas } = this.props
+        if(!Object.keys(tareas).length && !cargando){
+            traerTodas()
+        }
     }
 
     mostrarContenido = () => {
@@ -34,7 +43,7 @@ class Tareas extends Component {
     }
 
     ponerTareas = (usuario_id) => {
-        const { tareas } = this.props
+        const { tareas, cambioCheck, eliminar } = this.props
 
         const por_usuario = {
             ...tareas[usuario_id]
@@ -42,10 +51,16 @@ class Tareas extends Component {
 
         return Object.keys(por_usuario).map((tarea_id) => (
             <div key={tarea_id}>
-                <input type='checkbox' defaultChecked={por_usuario[tarea_id].completed }/>
+                <input type='checkbox'
+                    defaultChecked={por_usuario[tarea_id].completed }
+                    onChange={ () => cambioCheck(usuario_id, tarea_id) }/>
                 {
                     por_usuario[tarea_id].title
                 }
+                <button className='m_left'>
+                    <Link to={`/tareas/guardar/${usuario_id}/${tarea_id}`}>Editar</Link>
+                </button>
+                <button className='m_left' onClick={ () => eliminar(tarea_id)}>Eliminar</button>
             </div>
         ))
     }

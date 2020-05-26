@@ -1,23 +1,97 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import Spinner from '../General/Spinner'
+import Fatal from '../General/Fatal'
+import  { Redirect } from 'react-router-dom'
 
 import * as tareasActions from '../../actions/tareasActions';
 
 class Guardar extends Component {
 
+    componentDidMount() {
+        const { match: { params: { usu_id, tar_id } },
+                tareas,
+                cambioUsuarioId,
+                cambioTitulo,
+                limpiarForma
+        } = this.props
+
+        if( usu_id && tar_id) {
+            const tarea = tareas[usu_id][tar_id];
+            cambioUsuarioId(tarea.userId);
+            cambioTitulo(tarea.title);
+        }
+        else {
+            limpiarForma();
+        }
+    }
+
     cambioUsuarioId = (event) => {
-        event.preventDefault()
 		this.props.cambioUsuarioId(event.target.value);
 	};
 
 	cambioTitulo = (event) => {
-        event.preventDefault()
 		this.props.cambioTitulo(event.target.value);
 	};
+
+    guardar = () => {
+		const {
+			match: { params: { usu_id, tar_id } },
+			tareas,
+			usuario_id,
+			titulo,
+			agregar,
+			editar
+		} = this.props;
+
+        const nueva_tarea = {
+            userId: usuario_id,
+            title: titulo,
+            completed: false
+        }
+
+        if(usu_id && tar_id){
+            const tarea = tareas[usu_id][tar_id]
+            const tarea_editada = {
+                ...nueva_tarea,
+                completed: tarea.completed,
+                id: tarea.id
+            }
+
+            editar(tarea_editada)
+        }
+        else{
+            agregar(nueva_tarea)
+        }
+    }
+
+    deshabilitar = () => {
+        const { title , usuario_id, cargando } = this.props
+
+        if(cargando || !(usuario_id || title)){
+            return true
+        }
+
+        return false
+    }
+
+    mostrarAccion = () => {
+        const { error, cargando } = this.props
+
+        if(cargando){
+            return <Spinner />
+        }
+        if(error){
+            return <Fatal message={error}/>
+        }
+    }
 
 	render() {
 		return (
 			<div>
+                {
+                    (this.props.regresar) ? <Redirect to='/tareas' /> : ''
+                }
 				<h1>Guardar Tarea</h1>
 				Usuario id:
 				<input
@@ -32,9 +106,10 @@ class Guardar extends Component {
 					onChange={ this.cambioTitulo }
 				/>
 				<br /><br />
-				<button>
+				<button onClick={this.guardar()} disabled={this.deshabilitar()}>
 					Guardar
 				</button>
+                { this.mostrarAccion() }
 			</div>
 		);
 	}

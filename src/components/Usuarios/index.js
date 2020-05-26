@@ -18,7 +18,9 @@ class Usuarios extends Component {
   componentDidMount() {
      //const answer = await axios.get(URL_SERVICE)
      //this.setState({usuarios: answer.data})
-    this.props.traerTodos()
+    if(!this.props.usuarios.length){
+      this.props.traerTodos()
+    }
   }
 
   ponerContenido = () => {

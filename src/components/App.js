@@ -2,8 +2,9 @@ import React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import Menu from './Menu'
 import Usuarios from './Usuarios'
-
-const Tareas = () => <div>Tareas</div>
+import Publicaciones from './Publicaciones'
+import Tareas from './Tareas/index'
+import TareasGuardar from './Tareas/Guardar'
 
 const App = () => {
   return (
@@ -12,6 +13,8 @@ const App = () => {
       <div className="margen">
         <Route exact path='/' component={Usuarios}/>
         <Route exact path='/tareas' component={Tareas}/>
+        <Route exact path='/publicaciones/:key' component={Publicaciones}/>
+        <Route exact path='/tareas/guardar' component={TareasGuardar}/>
       </div>
     </BrowserRouter>
   );

@@ -1,10 +1,10 @@
-import { combineReducers } from 'redux'
-import usuariosReducers from './usuariosReducer'
-import publicacionesReducers from './publicacionesReducer'
-import tareasReducer from './tareasReducer'
+import { combineReducers } from 'redux';
+import usuariosReducer from './usuariosReducer';
+import publicacionesReducer from './publicacionesReducer';
+import tareasReducer from './tareasReducer';
 
 export default combineReducers({
-    usuariosReducers,
-    publicacionesReducers,
-    tareasReducer
-})
+	usuariosReducer,
+	publicacionesReducer,
+	tareasReducer
+});

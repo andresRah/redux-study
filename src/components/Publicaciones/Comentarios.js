@@ -6,9 +6,8 @@ import Fatal from '../General/Fatal';
 const Comentarios = (props) => {
 	if (props.com_error) {
 		return <Fatal mensaje={ props.com_error } />
-    }
-
-    if (props.com_cargando && !props.comentarios.length) {
+	}
+	if (props.com_cargando && !props.comentarios.length) {
 		return <Spinner />
 	}
 
@@ -29,6 +28,6 @@ const Comentarios = (props) => {
 	);
 };
 
-const mapStateToProps = ({publicacionesReducers}) => publicacionesReducers;
+const mapStateToProps = ({publicacionesReducer}) => publicacionesReducer;
 
 export default connect(mapStateToProps)(Comentarios);

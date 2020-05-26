@@ -1,32 +1,32 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import Spinner from '../General/Spinner'
-import Fatal from '../General/Fatal'
-import  { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import Spinner from '../General/Spinner';
+import Fatal from '../General/Fatal';
 
 import * as tareasActions from '../../actions/tareasActions';
 
 class Guardar extends Component {
+	componentDidMount() {
+		const {
+			match: { params: { usu_id, tar_id } },
+			tareas,
+			cambioUsuarioId,
+			cambioTitulo,
+			limpiarForma
+		} = this.props;
 
-    componentDidMount() {
-        const { match: { params: { usu_id, tar_id } },
-                tareas,
-                cambioUsuarioId,
-                cambioTitulo,
-                limpiarForma
-        } = this.props
+		if (usu_id && tar_id) {
+			const tarea = tareas[usu_id][tar_id];
+			cambioUsuarioId(tarea.userId);
+			cambioTitulo(tarea.title);
+		}
+		else {
+			limpiarForma();
+		}
+	}
 
-        if( usu_id && tar_id) {
-            const tarea = tareas[usu_id][tar_id];
-            cambioUsuarioId(tarea.userId);
-            cambioTitulo(tarea.title);
-        }
-        else {
-            limpiarForma();
-        }
-    }
-
-    cambioUsuarioId = (event) => {
+	cambioUsuarioId = (event) => {
 		this.props.cambioUsuarioId(event.target.value);
 	};
 
@@ -34,7 +34,7 @@ class Guardar extends Component {
 		this.props.cambioTitulo(event.target.value);
 	};
 
-    guardar = () => {
+	guardar = () => {
 		const {
 			match: { params: { usu_id, tar_id } },
 			tareas,
@@ -44,54 +44,55 @@ class Guardar extends Component {
 			editar
 		} = this.props;
 
-        const nueva_tarea = {
-            userId: usuario_id,
-            title: titulo,
-            completed: false
-        }
+		const nueva_tarea = {
+			userId: usuario_id,
+			title: titulo,
+			completed: false
+		};
 
-        if(usu_id && tar_id){
-            const tarea = tareas[usu_id][tar_id]
-            const tarea_editada = {
-                ...nueva_tarea,
-                completed: tarea.completed,
-                id: tarea.id
-            }
+		if (usu_id && tar_id) {
+			const tarea = tareas[usu_id][tar_id];
+			const tarea_editada = {
+				...nueva_tarea,
+				completed: tarea.completed,
+				id: tarea.id
+			};
+			editar(tarea_editada);
+		}
+		else {
+			agregar(nueva_tarea);
+		}
+	};
 
-            editar(tarea_editada)
-        }
-        else{
-            agregar(nueva_tarea)
-        }
-    }
+	deshabilitar = () => {
+		const { usuario_id, titulo, cargando } = this.props;
+		if (cargando) {
+			return true;
+		}
+		if (!usuario_id || !titulo) {
+			return true;
+		}
+		return false;
+	};
 
-    deshabilitar = () => {
-        const { title , usuario_id, cargando } = this.props
-
-        if(cargando || !(usuario_id || title)){
-            return true
-        }
-
-        return false
-    }
-
-    mostrarAccion = () => {
-        const { error, cargando } = this.props
-
-        if(cargando){
-            return <Spinner />
-        }
-        if(error){
-            return <Fatal message={error}/>
-        }
-    }
+	mostrarAccion = () => {
+		const { error, cargando } = this.props;
+		if (cargando) {
+			return <Spinner />;
+		}
+		if (error) {
+			return <Fatal mensaje={error} />;
+		}
+	};
 
 	render() {
 		return (
 			<div>
-                {
-                    (this.props.regresar) ? <Redirect to='/tareas' /> : ''
-                }
+				{
+					(this.props.regresar) ?
+					<Redirect to='/tareas' />
+					: ''
+				}
 				<h1>Guardar Tarea</h1>
 				Usuario id:
 				<input
@@ -106,10 +107,13 @@ class Guardar extends Component {
 					onChange={ this.cambioTitulo }
 				/>
 				<br /><br />
-				<button onClick={this.guardar()} disabled={this.deshabilitar()}>
+				<button
+					disabled={ this.deshabilitar() }
+					onClick={ this.guardar }
+				>
 					Guardar
 				</button>
-                { this.mostrarAccion() }
+				{ this.mostrarAccion() }
 			</div>
 		);
 	}
